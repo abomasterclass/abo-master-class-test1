@@ -1,1 +1,996 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ABO Master Class Digital Practice Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        
+        h1, h2 {
+            text-align: center;
+            color: #2c3e50;
+        }
+        
+        .instructions {
+            background-color: #e8f4f8;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        
+        .student-info {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        
+        .student-info input {
+            width: 100%;
+            padding: 8px;
+            margin: 5px 0 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        
+        .timer-container {
+            text-align: center;
+            margin-bottom: 15px;
+            font-size: 18px;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        
+        .question-container {
+            display: none;
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        
+        .question-container.active {
+            display: block;
+        }
+        
+        .question-number {
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .question-text {
+            margin-bottom: 15px;
+        }
+        
+        .options {
+            margin-bottom: 15px;
+        }
+        
+        .option {
+            display: block;
+            padding: 10px;
+            margin: 5px 0;
+            background-color: #f8f9fa;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        
+        .option:hover {
+            background-color: #e9ecef;
+        }
+        
+        .option.selected {
+            background-color: #d4edda;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .flag-button {
+            background-color: transparent;
+            border: none;
+            color: #6c757d;
+            cursor: pointer;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .flag-button.flagged {
+            color: #dc3545;
+        }
+        
+        .flag-icon {
+            margin-right: 5px;
+        }
+        
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+        
+        .nav-button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        
+        .nav-button:hover {
+            background-color: #2980b9;
+        }
+        
+        .nav-button:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+        
+        .progress-bar-container {
+            width: 100%;
+            background-color: #e9ecef;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        
+        .progress-bar {
+            height: 10px;
+            background-color: #3498db;
+            border-radius: 5px;
+            width: 1%;
+        }
+        
+        .question-nav {
+            display: flex;
+            flex-wrap: wrap;
+            margin: 20px 0;
+        }
+        
+        .question-nav-button {
+            width: 30px;
+            height: 30px;
+            margin: 3px;
+            background-color: #f8f9fa;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+        }
+        
+        .question-nav-button.answered {
+            background-color: #d4edda;
+            border-color: #c3e6cb;
+        }
+        
+        .question-nav-button.flagged {
+            border-color: #dc3545;
+        }
+        
+        .question-nav-button.current {
+            background-color: #3498db;
+            color: white;
+            border-color: #3498db;
+        }
+        
+        .submit-section {
+            text-align: center;
+            margin-top: 30px;
+        }
+        
+        .submit-button {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 18px;
+        }
+        
+        .submit-button:hover {
+            background-color: #218838;
+        }
+        
+        .results-container {
+            display: none;
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            margin-top: 20px;
+        }
+        
+        .score-summary {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .score-percentage {
+            font-size: 36px;
+            font-weight: bold;
+            color: #28a745;
+        }
+        
+        .domain-breakdown {
+            margin-bottom: 20px;
+        }
+        
+        .domain-score {
+            margin-bottom: 20px;
+        }
+        
+        .domain-bar-container {
+            width: 100%;
+            background-color: #e9ecef;
+            border-radius: 5px;
+            height: 20px;
+            margin-top: 5px;
+        }
+        
+        .domain-bar {
+            height: 20px;
+            background-color: #3498db;
+            border-radius: 5px;
+        }
+        
+        .domain-percentage {
+            font-weight: bold;
+            margin-left: 5px;
+        }
+        
+        .feedback-section {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        
+        .recommendations-section {
+            background-color: #e8f4f8;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 20px;
+            font-weight: bold;
+        }
+        
+        .start-screen {
+            text-align: center;
+        }
+        
+        .start-button {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 20px;
+            margin-top: 20px;
+        }
+        
+        .start-button:hover {
+            background-color: #218838;
+        }
+    </style>
+    <!-- Load question data -->
+    <script src="questions.js"></script>
+</head>
+<body>
+    <div id="start-screen">
+        <h1>ABO Master Class Digital Practice Test</h1>
+        
+        <div class="instructions">
+            <h2>Instructions</h2>
+            <p>This practice test consists of 125 multiple-choice questions that simulate the American Board of Optometry (ABO) Examination.</p>
+            <p>You have 2 hours to complete the test.</p>
+            <p>Questions are mixed across all domains, similar to the actual ABO exam.</p>
+            <p>You can flag questions for review and navigate between questions freely.</p>
+            <p>Your results will be shown after you submit the test.</p>
+        </div>
+        
+        <div class="student-info">
+            <h2>Student Information</h2>
+            <label for="student-name">Full Name:</label>
+            <input type="text" id="student-name" placeholder="Enter your full name">
+            
+            <label for="student-email">Email Address:</label>
+            <input type="email" id="student-email" placeholder="Enter your email address">
+        </div>
+        
+        <button class="start-button" onclick="startTest()">Start Test</button>
+    </div>
+    
+    <div id="test-screen">
+        <h1>ABO Master Class Digital Practice Test</h1>
+        
+        <div class="timer-container">
+            Time Remaining: <span id="timer-display">2h 00m 00s</span>
+        </div>
+        
+        <div class="progress-bar-container">
+            <div class="progress-bar" id="progress-bar"></div>
+        </div>
+        
+        <div class="navigation">
+            <button class="nav-button" id="prev-button" onclick="prevQuestion()" disabled>Previous</button>
+            <div>Question <span id="current-question">1</span> of <span id="total-questions">125</span></div>
+            <button class="nav-button" id="next-button" onclick="nextQuestion()">Next</button>
+        </div>
+        
+        <div class="question-nav" id="question-nav">
+            <!-- Question navigation buttons will be generated here -->
+        </div>
+        
+        <!-- Question containers will be generated dynamically -->
+        <div id="question-containers">
+            <!-- No hardcoded sample question here - all questions will be generated dynamically -->
+        </div>
+        
+        <div class="submit-section">
+            <button class="submit-button" onclick="confirmSubmit()">Submit Test</button>
+        </div>
+    </div>
+    
+    <div id="results-screen">
+        <h1>ABO Master Class Digital Practice Test Results</h1>
+        
+        <div class="results-container" id="results-container">
+            <div class="score-summary">
+                <h2>Your Score</h2>
+                <div class="score-percentage" id="score-percentage">0%</div>
+                <p><span id="correct-answers">0</span> out of 125 questions correct</p>
+            </div>
+            
+            <div class="domain-breakdown">
+                <h2>Domain Breakdown</h2>
+                <div id="domain-scores">
+                    <!-- Domain scores will be generated here -->
+                </div>
+            </div>
+            
+            <div class="feedback-section">
+                <h2>Overall Feedback</h2>
+                <p id="overall-feedback"></p>
+            </div>
+            
+            <div class="recommendations-section">
+                <h2>Study Recommendations</h2>
+                <div id="study-recommendations"></div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Test data
+        // Use the actual length of question data array
+        const totalQuestions = questionData.length;
+        let currentQuestion = 1;
+        const answers = new Array(totalQuestions + 1).fill(null);
+        const flagged = new Array(totalQuestions + 1).fill(false);
+        
+        // Hide test and results screens initially
+        document.getElementById('test-screen').style.display = 'none';
+        document.getElementById('results-screen').style.display = 'none';
+        
+        // Update total questions display
+        document.getElementById('total-questions').textContent = totalQuestions;
+        
+        // Correct answers for scoring
+        const correctAnswers = {
+            1: "A",
+            2: "B",
+            3: "B",
+            4: "A",
+            5: "D",
+            6: "C",
+            7: "D",
+            8: "B",
+            9: "C",
+            10: "B",
+            11: "B",
+            12: "B",
+            13: "C",
+            14: "C",
+            15: "C",
+            16: "B",
+            17: "C",
+            18: "A",
+            19: "B",
+            20: "B",
+            21: "B",
+            22: "B",
+            23: "D",
+            24: "C",
+            25: "B",
+            26: "C",
+            27: "C",
+            28: "C",
+            29: "D",
+            30: "B",
+            31: "B",
+            32: "C",
+            33: "A",
+            34: "B",
+            35: "C",
+            36: "D",
+            37: "D",
+            38: "B",
+            39: "B",
+            40: "C"
+            // Additional correct answers are defined in the questionData array
+        };
+        
+        // Initialize the test
+        function startTest() {
+            const studentName = document.getElementById('student-name').value;
+            const studentEmail = document.getElementById('student-email').value;
+            
+            if (!studentName || !studentEmail) {
+                alert('Please enter your name and email address to start the test.');
+                return;
+            }
+            
+            // Generate question containers before showing the test screen
+            generateQuestionContainers();
+            
+            document.getElementById('start-screen').style.display = 'none';
+            document.getElementById('test-screen').style.display = 'block';
+            
+            // Start the timer
+            startTimer(120); // 2 hours = 120 minutes
+            
+            // Show the first question
+            showQuestion(1);
+            
+            // Update the progress bar
+            updateProgressBar();
+        }
+        
+        // Timer functionality
+        function startTimer(durationInMinutes) {
+            const startTime = new Date().getTime();
+            const endTime = startTime + (durationInMinutes * 60 * 1000);
+            
+            const timerInterval = setInterval(function() {
+                const currentTime = new Date().getTime();
+                const remainingTime = endTime - currentTime;
+                
+                if (remainingTime <= 0) {
+                    clearInterval(timerInterval);
+                    alert('Time is up! Your test will be submitted automatically.');
+                    submitTest();
+                    return;
+                }
+                
+                const hours = Math.floor((remainingTime % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((remainingTime % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((remainingTime % (1000 * 60)) / 1000);
+                
+                document.getElementById('timer-display').textContent = 
+                    hours + 'h ' + 
+                    (minutes < 10 ? '0' : '') + minutes + 'm ' + 
+                    (seconds < 10 ? '0' : '') + seconds + 's';
+            }, 1000);
+        }
+        
+        // Show a specific question
+        function showQuestion(questionNumber) {
+            // Hide all questions
+            const questions = document.querySelectorAll('.question-container');
+            questions.forEach(question => {
+                question.classList.remove('active');
+            });
+            
+            // Show the selected question
+            const questionElement = document.getElementById('question' + questionNumber);
+            if (questionElement) {
+                questionElement.classList.add('active');
+            }
+            
+            // Update current question display
+            document.getElementById('current-question').textContent = questionNumber;
+            
+            // Update navigation buttons
+            document.getElementById('prev-button').disabled = (questionNumber === 1);
+            document.getElementById('next-button').disabled = (questionNumber === totalQuestions);
+            
+            // Update progress bar
+            const progressPercentage = (questionNumber / totalQuestions) * 100;
+            document.getElementById('progress-bar').style.width = progressPercentage + '%';
+            
+            // Update current question in navigation
+            currentQuestion = questionNumber;
+            
+            // Update question navigation
+            updateQuestionNav();
+        }
+        
+        // Go to a specific question
+        function goToQuestion(questionNumber) {
+            if (questionNumber >= 1 && questionNumber <= totalQuestions) {
+                showQuestion(questionNumber);
+            }
+        }
+        
+        // Go to next question
+        function nextQuestion() {
+            if (currentQuestion < totalQuestions) {
+                showQuestion(currentQuestion + 1);
+            }
+        }
+        
+        // Go to previous question
+        function prevQuestion() {
+            if (currentQuestion > 1) {
+                showQuestion(currentQuestion - 1);
+            }
+        }
+        
+        // Select an option for a question
+        function selectOption(questionNumber, option) {
+            // Remove selected class from all options
+            const optionElements = document.querySelectorAll('#question' + questionNumber + ' .option');
+            optionElements.forEach(element => {
+                element.classList.remove('selected');
+            });
+            
+            // Add selected class to the chosen option
+            const selectedOption = Array.from(optionElements).find(element => 
+                element.textContent.startsWith(option)
+            );
+            
+            if (selectedOption) {
+                selectedOption.classList.add('selected');
+            }
+            
+            // Store the answer
+            answers[questionNumber] = option;
+            
+            // Update question navigation
+            updateQuestionNav();
+        }
+        
+        // Toggle flag for a question
+        function toggleFlag(questionNumber) {
+            flagged[questionNumber] = !flagged[questionNumber];
+            
+            // Update flag button appearance
+            const flagButton = document.querySelector('#question' + questionNumber + ' .flag-button');
+            if (flagged[questionNumber]) {
+                flagButton.classList.add('flagged');
+            } else {
+                flagButton.classList.remove('flagged');
+            }
+            
+            // Update question navigation
+            updateQuestionNav();
+        }
+        
+        // Update question navigation buttons
+        function updateQuestionNav() {
+            const navButtons = document.querySelectorAll('.question-nav-button');
+            
+            navButtons.forEach((button, index) => {
+                const questionNumber = index + 1;
+                
+                // Reset classes
+                button.classList.remove('answered', 'flagged', 'current');
+                
+                // Add appropriate classes
+                if (answers[questionNumber]) {
+                    button.classList.add('answered');
+                }
+                
+                if (flagged[questionNumber]) {
+                    button.classList.add('flagged');
+                }
+                
+                if (questionNumber === currentQuestion) {
+                    button.classList.add('current');
+                }
+            });
+        }
+        
+        // Confirm test submission
+        function confirmSubmit() {
+            // Count answered questions
+            let answeredCount = 0;
+            for (let i = 1; i <= totalQuestions; i++) {
+                if (answers[i]) {
+                    answeredCount++;
+                }
+            }
+            
+            if (answeredCount < totalQuestions) {
+                const unansweredCount = totalQuestions - answeredCount;
+                const confirmMessage = `You have ${unansweredCount} unanswered questions. Are you sure you want to submit your test?`;
+                
+                if (!confirm(confirmMessage)) {
+                    return;
+                }
+            }
+            
+            submitTest();
+        }
+        
+        // Calculate total score
+        function calculateTotalScore() {
+            let totalCorrect = 0;
+            
+            for (let i = 1; i <= totalQuestions; i++) {
+                // Get correct answer from questionData for questions beyond the hardcoded ones
+                let correctAnswer;
+                if (i <= 40) {
+                    correctAnswer = correctAnswers[i];
+                } else {
+                    // Find the question in questionData
+                    const question = questionData.find(q => q.id === i);
+                    if (question) {
+                        correctAnswer = question.correctAnswer;
+                    }
+                }
+                
+                if (answers[i] === correctAnswer) {
+                    totalCorrect++;
+                }
+            }
+            
+            return {
+                correct: totalCorrect,
+                total: totalQuestions,
+                percentage: Math.round((totalCorrect / totalQuestions) * 100)
+            };
+        }
+        
+        // Calculate domain scores
+        function calculateDomainScores() {
+            const domainScores = {};
+            const domainCounts = {};
+            
+            // Initialize domain scores and counts
+            for (let i = 1; i <= 9; i++) {
+                domainScores[i] = 0;
+                domainCounts[i] = 0;
+            }
+            
+            // Calculate scores for each domain
+            for (let i = 1; i <= totalQuestions; i++) {
+                // Get domain and correct answer from questionData
+                let domain, correctAnswer;
+                
+                // Find the question in questionData
+                const question = questionData.find(q => q.id === i);
+                if (question) {
+                    domain = question.domain;
+                    correctAnswer = question.correctAnswer;
+                    
+                    // Increment domain count
+                    domainCounts[domain]++;
+                    
+                    // Check if answer is correct
+                    if (answers[i] === correctAnswer) {
+                        domainScores[domain]++;
+                    }
+                }
+            }
+            
+            // Calculate percentages
+            const domainPercentages = {};
+            for (let i = 1; i <= 9; i++) {
+                if (domainCounts[i] > 0) {
+                    domainPercentages[i] = Math.round((domainScores[i] / domainCounts[i]) * 100);
+                } else {
+                    domainPercentages[i] = 0;
+                }
+            }
+            
+            return {
+                scores: domainScores,
+                counts: domainCounts,
+                percentages: domainPercentages
+            };
+        }
+        
+        // Domain-specific feedback
+        const domainFeedback = {
+            1: { // Ametropia/Ophthalmic Optics
+                excellent: "Excellent understanding of ophthalmic optics concepts. You demonstrate strong knowledge of lens designs, optical principles, and visual optics.",
+                good: "Good understanding of ophthalmic optics. Review concepts related to lens designs and optical principles for improvement.",
+                fair: "Fair understanding of ophthalmic optics. Focus on strengthening your knowledge of lens designs, optical principles, and visual optics.",
+                poor: "This area needs significant improvement. Concentrate on fundamental concepts of ophthalmic optics, lens designs, and optical principles."
+            },
+            2: { // Binocular Vision/Ocular Motility
+                excellent: "Excellent understanding of binocular vision and ocular motility. You demonstrate strong knowledge of eye movement disorders and binocular vision anomalies.",
+                good: "Good understanding of binocular vision concepts. Review specific eye movement disorders and binocular vision testing procedures.",
+                fair: "Fair understanding of binocular vision. Focus on strengthening your knowledge of eye movement disorders and binocular vision anomalies.",
+                poor: "This area needs significant improvement. Concentrate on fundamental concepts of binocular vision, eye movements, and related disorders."
+            },
+            3: { // Ocular Disease
+                excellent: "Excellent understanding of ocular diseases. You demonstrate strong knowledge of disease processes, diagnosis, and management strategies.",
+                good: "Good understanding of ocular diseases. Review specific disease processes and management strategies for improvement.",
+                fair: "Fair understanding of ocular diseases. Focus on strengthening your knowledge of disease processes, diagnosis, and management strategies.",
+                poor: "This area needs significant improvement. Concentrate on fundamental concepts of ocular diseases, their diagnosis, and management."
+            },
+            4: { // Systemic Disease
+                excellent: "Excellent understanding of systemic diseases and their ocular manifestations. You demonstrate strong knowledge of the relationship between systemic conditions and eye health.",
+                good: "Good understanding of systemic diseases. Review specific systemic conditions and their ocular manifestations for improvement.",
+                fair: "Fair understanding of systemic diseases. Focus on strengthening your knowledge of the relationship between systemic conditions and eye health.",
+                poor: "This area needs significant improvement. Concentrate on fundamental concepts of systemic diseases and their ocular manifestations."
+            },
+            5: { // Contact Lenses
+                excellent: "Excellent understanding of contact lens principles and fitting. You demonstrate strong knowledge of lens materials, designs, and patient management.",
+                good: "Good understanding of contact lens principles. Review specific lens designs and fitting techniques for improvement.",
+                fair: "Fair understanding of contact lenses. Focus on strengthening your knowledge of lens materials, designs, and patient management.",
+                poor: "This area needs significant improvement. Concentrate on fundamental concepts of contact lens materials, designs, and fitting procedures."
+            },
+            6: { // Refractive Management/Functional Vision
+                excellent: "Excellent understanding of refractive management and functional vision. You demonstrate strong knowledge of refractive procedures and vision therapy techniques.",
+                good: "Good understanding of refractive management. Review specific refractive procedures and functional vision assessment techniques.",
+                fair: "Fair understanding of refractive management. Focus on strengthening your knowledge of refractive procedures and vision therapy techniques.",
+                poor: "This area needs significant improvement. Concentrate on fundamental concepts of refractive management and functional vision assessment."
+            },
+            7: { // Low Vision Rehabilitation
+                excellent: "Excellent understanding of low vision rehabilitation. You demonstrate strong knowledge of low vision devices, assessment techniques, and patient management.",
+                good: "Good understanding of low vision rehabilitation. Review specific low vision devices and assessment techniques for improvement.",
+                fair: "Fair understanding of low vision rehabilitation. Focus on strengthening your knowledge of low vision devices and assessment techniques.",
+                poor: "This area needs significant improvement. Concentrate on fundamental concepts of low vision rehabilitation, devices, and assessment techniques."
+            },
+            8: { // Pediatrics/Binocular Vision
+                excellent: "Excellent understanding of pediatric optometry and binocular vision. You demonstrate strong knowledge of pediatric assessment techniques and vision development.",
+                good: "Good understanding of pediatric optometry. Review specific pediatric assessment techniques and vision development concepts.",
+                fair: "Fair understanding of pediatric optometry. Focus on strengthening your knowledge of pediatric assessment techniques and vision development.",
+                poor: "This area needs significant improvement. Concentrate on fundamental concepts of pediatric optometry and vision development."
+            },
+            9: { // Vision Therapy/Rehabilitation
+                excellent: "Excellent understanding of vision therapy and rehabilitation. You demonstrate strong knowledge of therapy techniques and patient management.",
+                good: "Good understanding of vision therapy. Review specific therapy techniques and patient management strategies for improvement.",
+                fair: "Fair understanding of vision therapy. Focus on strengthening your knowledge of therapy techniques and patient management.",
+                poor: "This area needs significant improvement. Concentrate on fundamental concepts of vision therapy techniques and rehabilitation strategies."
+            }
+        };
+        
+        // Generate overall feedback based on score
+        function generateOverallFeedback(percentage) {
+            if (percentage >= 90) {
+                return {
+                    level: "excellent",
+                    message: "Excellent work! You've demonstrated a strong understanding of opticianry concepts across all domains. You're well-prepared for the ABO exam."
+                };
+            } else if (percentage >= 70) {
+                return {
+                    level: "good",
+                    message: "Good job! You're on the right track with your ABO preparation. Continue studying, particularly in the domains where you scored below 70%."
+                };
+            } else if (percentage >= 50) {
+                return {
+                    level: "fair",
+                    message: "Fair performance. You've demonstrated basic knowledge in some areas, but need more preparation before taking the ABO exam. Focus on the domains where you scored lowest."
+                };
+            } else {
+                return {
+                    level: "poor",
+                    message: "This score indicates you need additional preparation before taking the ABO exam. Don't be discouraged! Focus on thoroughly reviewing all domains, especially those where you scored lowest."
+                };
+            }
+        }
+        
+        // Generate domain-specific feedback
+        function generateDomainFeedback(domain, percentage) {
+            if (percentage >= 90) {
+                return domainFeedback[domain].excellent;
+            } else if (percentage >= 70) {
+                return domainFeedback[domain].good;
+            } else if (percentage >= 50) {
+                return domainFeedback[domain].fair;
+            } else {
+                return domainFeedback[domain].poor;
+            }
+        }
+        
+        // Generate study recommendations
+        function generateStudyRecommendations(domainScores) {
+            const recommendations = [];
+            
+            // Find domains with lowest scores
+            const domainPercentages = domainScores.percentages;
+            const sortedDomains = Object.keys(domainPercentages).sort((a, b) => domainPercentages[a] - domainPercentages[b]);
+            
+            // Generate recommendations for the three lowest-scoring domains
+            for (let i = 0; i < Math.min(3, sortedDomains.length); i++) {
+                const domain = sortedDomains[i];
+                const percentage = domainPercentages[domain];
+                
+                if (percentage < 70) {
+                    recommendations.push(`<p><strong>${getDomainName(domain)}:</strong> Focus on improving your understanding in this area (${percentage}% correct). Review key concepts and practice with additional questions.</p>`);
+                }
+            }
+            
+            // If all domains scored above 70%, provide general recommendation
+            if (recommendations.length === 0) {
+                recommendations.push("<p>You've performed well across all domains. Continue to review all areas to maintain your knowledge.</p>");
+            }
+            
+            return recommendations.join("");
+        }
+        
+        // Get domain name from domain number
+        function getDomainName(domainNumber) {
+            const domainNames = {
+                1: "Ametropia/Ophthalmic Optics",
+                2: "Binocular Vision/Ocular Motility",
+                3: "Ocular Disease",
+                4: "Systemic Disease",
+                5: "Contact Lenses",
+                6: "Refractive Management/Functional Vision",
+                7: "Low Vision Rehabilitation",
+                8: "Pediatrics/Binocular Vision",
+                9: "Vision Therapy/Rehabilitation"
+            };
+            
+            return domainNames[domainNumber] || `Domain ${domainNumber}`;
+        }
+        
+        // Update results with feedback
+        function updateResultsWithFeedback() {
+            // Calculate scores
+            const totalScore = calculateTotalScore();
+            const domainScores = calculateDomainScores();
+            
+            // Update total score
+            document.getElementById('score-percentage').textContent = totalScore.percentage + '%';
+            document.getElementById('correct-answers').textContent = totalScore.correct;
+            
+            // Generate overall feedback
+            const overallFeedback = generateOverallFeedback(totalScore.percentage);
+            document.getElementById('overall-feedback').textContent = overallFeedback.message;
+            
+            // Generate domain breakdown
+            const domainScoresElement = document.getElementById('domain-scores');
+            domainScoresElement.innerHTML = '';
+            
+            for (let i = 1; i <= 9; i++) {
+                if (domainScores.counts[i] > 0) {
+                    const domainElement = document.createElement('div');
+                    domainElement.className = 'domain-score';
+                    
+                    const domainName = getDomainName(i);
+                    const percentage = domainScores.percentages[i];
+                    const correct = domainScores.scores[i];
+                    const total = domainScores.counts[i];
+                    
+                    domainElement.innerHTML = `
+                        <div>${domainName}: ${correct}/${total} (${percentage}%)</div>
+                        <div class="domain-bar-container">
+                            <div class="domain-bar" style="width: ${percentage}%"></div>
+                        </div>
+                    `;
+                    
+                    domainScoresElement.appendChild(domainElement);
+                }
+            }
+            
+            // Generate study recommendations
+            const recommendations = generateStudyRecommendations(domainScores);
+            document.getElementById('study-recommendations').innerHTML = recommendations;
+        }
+        
+        // Send results to instructor
+        function sendResultsToInstructor() {
+            // This would be implemented with server-side code
+            // For now, we'll just simulate the process
+            
+            const studentName = document.getElementById('student-name').value;
+            const studentEmail = document.getElementById('student-email').value;
+            const totalScore = calculateTotalScore();
+            
+            console.log(`Results for ${studentName} (${studentEmail}): ${totalScore.percentage}%`);
+            
+            // In a real implementation, this would send the data to a server
+            // via an AJAX request or form submission
+        }
+        
+        // Submit the test
+        function submitTest() {
+            // Hide test screen
+            document.getElementById('test-screen').style.display = 'none';
+            
+            // Show results screen
+            document.getElementById('results-screen').style.display = 'block';
+            document.getElementById('results-container').style.display = 'block';
+            
+            // Update results with feedback
+            updateResultsWithFeedback();
+            
+            // Send results to instructor
+            sendResultsToInstructor();
+        }
+        
+        // Generate all question containers dynamically
+        function generateQuestionContainers() {
+            const questionContainers = document.getElementById('question-containers');
+            
+            // Clear any existing content
+            questionContainers.innerHTML = '';
+            
+            // Create containers for all questions
+            questionData.forEach(question => {
+                const container = document.createElement('div');
+                container.className = 'question-container';
+                container.id = 'question' + question.id;
+                
+                const questionNumber = document.createElement('div');
+                questionNumber.className = 'question-number';
+                questionNumber.textContent = 'Question ' + question.id;
+                
+                const questionText = document.createElement('div');
+                questionText.className = 'question-text';
+                questionText.textContent = question.text;
+                
+                const options = document.createElement('div');
+                options.className = 'options';
+                
+                // Create option elements
+                question.options.forEach(option => {
+                    const optionElement = document.createElement('div');
+                    optionElement.className = 'option';
+                    optionElement.textContent = option.id + '. ' + option.text;
+                    optionElement.onclick = function() {
+                        selectOption(question.id, option.id);
+                    };
+                    options.appendChild(optionElement);
+                });
+                
+                // Create flag button
+                const flagButton = document.createElement('button');
+                flagButton.className = 'flag-button';
+                flagButton.innerHTML = '<span class="flag-icon">⚑</span> Flag for review';
+                flagButton.onclick = function() {
+                    toggleFlag(question.id);
+                };
+                
+                // Append all elements to container
+                container.appendChild(questionNumber);
+                container.appendChild(questionText);
+                container.appendChild(options);
+                container.appendChild(flagButton);
+                
+                // Append container to question containers
+                questionContainers.appendChild(container);
+            });
+            
+            // Generate question navigation buttons
+            generateQuestionNav();
+        }
+        
+        // Generate question navigation buttons
+        function generateQuestionNav() {
+            const questionNav = document.getElementById('question-nav');
+            questionNav.innerHTML = '';
+            
+            for (let i = 1; i <= questionData.length; i++) {
+                const button = document.createElement('div');
+                button.className = 'question-nav-button';
+                button.textContent = i;
+                button.onclick = function() {
+                    goToQuestion(i);
+                };
+                questionNav.appendChild(button);
+            }
+        }
+    </script>
+</body>
+</html>
 
